@@ -10,13 +10,19 @@ const other_page = fs.readFileSync('./other.ejs', 'utf8');
 const style_css = fs.readFileSync('./style.css', 'utf8');
 
 const getFromClient = (request, response) => {
-  var url_parts = url.parse(request.url);
+  // 第２引数にtrueをつけると、クエリーパラメータもパースされる
+  var url_parts = url.parse(request.url, true);
   switch (url_parts.pathname) {
     case '/':
+      var subscribe = 'これはIndexページです。';
+      var query = url_parts.query;
+      if (query.msg != undefined) {
+        subscribe += 'あなたは、「' + query.msg + '」お送りしました。';
+      }
       // レンダリングの実行
       var content = ejs.render(index_page, {
         title: 'Index',
-        content: 'これはIndexページです。',
+        content: subscribe,
       });
       response.writeHead(200, { 'Content-Type': 'text/html' });
       response.write(content);
