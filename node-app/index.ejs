@@ -16,12 +16,10 @@
   </header>
   <div role="main">
     <p><%=content %></p>
-    <table class="table">
-        <% var id = 0; %>
-        <% for(var key in data) {%>
-        <%- include('data_item', {id:++id, key:key, val:[data[key]]}) %>
-        <% } %>
-    </table>
+    <% var id = 0; %>
+    <% for(var key in data) {%>
+    <%- include('data_item', {id:++id, key:key, val:[data[key]]}) %>
+    <% } %>
     <form action="/other" method="post">
       <input type="text" name="msg" class="form-control">
       <input type="submit" value="Click" class="btn btn-primary">
