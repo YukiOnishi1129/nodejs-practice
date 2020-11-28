@@ -10,6 +10,13 @@ const index_page = fs.readFileSync('./index.ejs', 'utf8');
 const other_page = fs.readFileSync('./other.ejs', 'utf8');
 const style_css = fs.readFileSync('./style.css', 'utf8');
 
+var data = {
+  Taro: '09-999-99',
+  Hanako: '08-888-88',
+  Sachiko: '07-777-77',
+  Ichiro: '06-666-66',
+};
+
 /**
  * indexのアクセス処理
  * @param {*} request
@@ -20,6 +27,7 @@ const response_index = (request, response) => {
   var content = ejs.render(index_page, {
     title: 'Index',
     content: msg,
+    data: data,
   });
   response.writeHead(200, { 'Content-Type': 'text/html' });
   response.write(content);
