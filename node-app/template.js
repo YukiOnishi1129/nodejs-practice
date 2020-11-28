@@ -28,6 +28,7 @@ const response_index = (request, response) => {
     title: 'Index',
     content: msg,
     data: data,
+    filename: 'data_item', // パーシャルファイルを記載(data_item.ejs)
   });
   response.writeHead(200, { 'Content-Type': 'text/html' });
   response.write(content);
