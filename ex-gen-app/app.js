@@ -8,6 +8,7 @@ var logger = require('morgan'); // httpリクエストをログに出すモジ�
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var helloRouter = require('./routes/hello');
+const session = require('express-session');
 
 var app = express();
 
@@ -23,6 +24,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// sessionの設定は、「var app = express()」より後
+// かつ「routes」フォルダのスクリプトをルーティングするapp.useよりも前に記述
+var session_opt = {
+  secret: 'keyboard cat', //秘密キー
+  resave: false, // セッションストアに強制的に値を保存する設定
+  saveUninitialized: false, // 初期化されていない値を強制的に保存するための設定
+  cookie: { maxAge: 60 * 60 * 1000 }, // セッションIDを保管するcookieの設定
+};
+app.use(session(session_opt));
 
 // 特定のアドレスにアクセスした時の処理を設定
 app.use('/', indexRouter);
