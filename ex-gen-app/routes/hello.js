@@ -40,7 +40,7 @@ router.get('/', (req, res, next) => {
             title: 'Hello!',
             content: rows,
           };
-          res.render('hello', data);
+          res.render('hello/index', data);
         }
       }
     );
@@ -93,6 +93,120 @@ router.post('/post', (req, res, next) => {
     content: 'Last Message: ' + req.session.message,
   };
   res.render('hello', data);
+});
+
+/**
+ * 新規作成画面
+ */
+router.get('/add', (req, res, next) => {
+  var data = {
+    title: 'Hello/Add',
+    content: '新しいレコードを入力',
+  };
+  res.render('hello/add', data);
+});
+
+/**
+ * 新規作成のPOST処理
+ */
+router.post('/add', (req, res, next) => {
+  const nm = req.body.name;
+  const ml = req.body.mail;
+  const ag = req.body.age;
+  db.serialize(() => {
+    // db.run: DB側からレコードを取り出す必要のない処理を実行する際に用いる
+    db.run('insert into mydata (name, mail, age) values (?, ?, ?)', nm, ml, ag);
+  });
+  res.redirect('/hello');
+});
+
+/**
+ * 一覧表示
+ */
+router.get('/show', (req, res, next) => {
+  const id = req.query.id;
+  db.serialize(() => {
+    const q = 'select * from mydata where id = ?';
+    // db.get: 第１引数 クエリー, 第２引数 ?に渡す配列
+    // db.allとの違いは「得られるレコードは1行だけ」(複数行当てはまると最初の1行のみ)
+    db.get(q, [id], (err, row) => {
+      if (!err) {
+        var data = {
+          title: 'Hello/show',
+          content: 'id = ' + id + 'レコード：',
+          mydata: row,
+        };
+        res.render('hello/show', data);
+      }
+    });
+  });
+});
+
+/**
+ * 編集画面表示
+ */
+router.get('/edit', (req, res, next) => {
+  const id = req.query.id;
+  db.serialize(() => {
+    const q = 'select * from mydata where id = ?';
+    db.get(q, [id], (err, row) => {
+      if (!err) {
+        var data = {
+          title: 'hello/edit',
+          content: 'id = ' + id + ' のレコードを編集：',
+          mydata: row,
+        };
+        res.render('hello/edit', data);
+      }
+    });
+  });
+});
+
+/**
+ * 編集処理
+ */
+router.post('/edit', (req, res, next) => {
+  const id = req.body.id;
+  const nm = req.body.name;
+  const ml = req.body.mail;
+  const ag = req.body.age;
+  const q = 'update mydata set name = ?, mail = ?, age = ? where id = ?';
+  db.serialize(() => {
+    db.run(q, nm, ml, ag, id);
+  });
+  res.redirect('/hello');
+});
+
+/**
+ * 削除画面
+ */
+router.get('/delete', (req, res, next) => {
+  const id = req.query.id;
+  db.serialize(() => {
+    const q = 'select * from mydata where id = ?';
+    db.get(q, [id], (err, row) => {
+      if (!err) {
+        var data = {
+          title: 'Hello/Delete',
+          content: 'id = ' + id + ' のレコードを削除：',
+          mydata: row,
+        };
+        res.render('hello/delete', data);
+      }
+    });
+  });
+});
+
+/**
+ * 削除処理
+ */
+router.post('/delete', (req, res, next) => {
+  const id = req.body.id;
+  db.serialize(() => {
+    const q = 'delete from mydata where id = ?';
+    db.run(q, id);
+  });
+  res.redirect('/hello');
 });
 
 module.exports = router;
