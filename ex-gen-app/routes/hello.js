@@ -6,6 +6,9 @@ const sqlite3 = require('sqlite3');
 // データベースオブジェクトの取得
 const db = new sqlite3.Database('mydb.sqlite3');
 
+const { check, validationResult } = require('express-validator');
+const { notEqual } = require('assert');
+
 // 第一引数に'/'を指定する理由
 // → app.jsで指定した'/hello'の後に続くパスを示す
 router.get('/', (req, res, next) => {
@@ -101,7 +104,8 @@ router.post('/post', (req, res, next) => {
 router.get('/add', (req, res, next) => {
   var data = {
     title: 'Hello/Add',
-    content: '新しいレコードを入力',
+    content: '新しいレコードを入力：',
+    form: { name: '', mail: '', age: 0 },
   };
   res.render('hello/add', data);
 });
@@ -109,16 +113,51 @@ router.get('/add', (req, res, next) => {
 /**
  * 新規作成のPOST処理
  */
-router.post('/add', (req, res, next) => {
-  const nm = req.body.name;
-  const ml = req.body.mail;
-  const ag = req.body.age;
-  db.serialize(() => {
-    // db.run: DB側からレコードを取り出す必要のない処理を実行する際に用いる
-    db.run('insert into mydata (name, mail, age) values (?, ?, ?)', nm, ml, ag);
-  });
-  res.redirect('/hello');
-});
+router.post(
+  '/add',
+  [
+    // チェック項目を追加
+    check('name', 'NAME は必ず入力して下さい。').notEmpty().escape(),
+    check('mail', 'MAIL はメールアドレスを記入して下さい。').isEmail().escape(),
+    check('age', 'AGE は年齢（整数）を入力下さい。').isInt(),
+    check('age', 'AGEは0以上120以下で入力ください。').custom((value) => {
+      return value >= 0 && value <= 120;
+    }),
+  ],
+  (req, res, next) => {
+    // バリデーション実行
+    const errors = validationResult(req);
+
+    // エラーがあるかチェック
+    if (!errors.isEmpty()) {
+      var result = '<ul class="text-danger">';
+      var result_arr = errors.array();
+      for (var n in result_arr) {
+        result += '<li>' + result_arr[n].msg + '</li>';
+      }
+      result += '</ul>';
+      var data = {
+        title: 'Hello/Add',
+        content: result,
+        form: req.body,
+      };
+      res.render('hello/add', data);
+    } else {
+      var nm = req.body.name;
+      var ml = req.body.mail;
+      var ag = req.body.age;
+      db.serialize(() => {
+        db.run(
+          'insert into mydata (name, mail, age) values (?, ?, ?)',
+          nm,
+          ml,
+          ag
+        );
+      });
+      res.redirect('/hello');
+    }
+  }
+);
 
 /**
  * 一覧表示
