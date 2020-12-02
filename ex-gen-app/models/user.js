@@ -1,7 +1,5 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -12,15 +10,49 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
     }
-  };
-  User.init({
-    name: DataTypes.STRING,
-    pass: DataTypes.STRING,
-    mail: DataTypes.STRING,
-    age: DataTypes.INTEGER
-  }, {
-    sequelize,
-    modelName: 'User',
-  });
+  }
+  User.init(
+    {
+      // バリデーション処理追加
+      name: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: {
+            msg: '名前は必ず入力してください。',
+          },
+        },
+      },
+      pass: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: {
+            msg: 'パスワードは必ず入力してください。',
+          },
+        },
+      },
+      mail: {
+        type: DataTypes.STRING,
+        validate: {
+          isEmail: {
+            msg: 'メールアドレスを入力下さい。',
+          },
+        },
+      },
+      age: {
+        type: DataTypes.INTEGER,
+        validate: {
+          isInt: { msg: '整数を入力下さい。' },
+          min: {
+            args: [0],
+            msg: 'ゼロ以上の値が必要です。',
+          },
+        },
+      },
+    },
+    {
+      sequelize,
+      modelName: 'User',
+    }
+  );
   return User;
 };

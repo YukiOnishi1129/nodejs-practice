@@ -26,6 +26,8 @@ router.get('/', function (req, res, next) {
 router.get('/add', (req, res, next) => {
   var data = {
     title: 'Users/Add',
+    form: new db.User(),
+    err: null, //バリデーションエラーが発生した時のエラーオブジェクト
   };
   res.render('users/add', data);
 });
@@ -34,19 +36,26 @@ router.get('/add', (req, res, next) => {
  * 新規追加処理
  */
 router.post('/add', (req, res, next) => {
+  const form = {
+    name: req.body.name,
+    pass: req.body.pass,
+    mail: req.body.mail,
+    age: req.body.age,
+  };
   db.sequelize
     // sync: 全てのモデルを同期して処理する(複数アクセスが実行されるのを防ぐ)
     .sync()
-    .then(() =>
-      db.User.create({
-        name: req.body.name,
-        pass: req.body.pass,
-        mail: req.body.mail,
-        age: req.body.age,
-      })
-    )
+    .then(() => db.User.create(form))
     .then((usr) => {
       res.redirect('/users');
+    })
+    .catch((err) => {
+      var data = {
+        title: 'Users/Add',
+        form: form,
+        err: err,
+      };
+      res.render('users/add', data);
     });
 });
 
