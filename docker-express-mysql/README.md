@@ -40,3 +40,7 @@ npm install
 #### mysql 接続
 
 - https://www.366service.com/jp/qa/9eea7b49daf3a83d62d311b832ceb3e1
+
+##### SQL 直書きのやり方はこちら
+
+- https://reffect.co.jp/node-js/express-js-connect-mysql

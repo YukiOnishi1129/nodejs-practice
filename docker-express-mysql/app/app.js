@@ -22,7 +22,7 @@ const con = mysql.createConnection({
 
 con.connect((err) => {
   if (err) throw err;
-  console.log("Connected");
+  // console.log("Connected");
   //  table作成
   // const sql =
   //   "CREATE TABLE IF NOT EXISTS users (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, name VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL)";
@@ -51,8 +51,20 @@ app.get("/", (req, res) => {
 //   });
 // });
 
+/**
+ * 新規作成画面へ遷移
+ */
 app.get("/form", (req, res) => {
   res.sendFile(path.join(__dirname, "html/form.html"));
+});
+
+// 編集画面へ遷移
+app.get("/edit/:id", (req, res) => {
+  const sql = "SELECT * FROM users WHERE id = ?";
+  con.query(sql, [req.params.id], (err, result, fields) => {
+    if (err) throw err;
+    res.render("edit", { user: result });
+  });
 });
 
 /**
@@ -64,6 +76,18 @@ app.post("/form", (req, res) => {
     if (err) throw err;
     // console.log(result);
     // res.send("登録が完了しました");
+    res.redirect("/");
+  });
+});
+
+/**
+ * 更新処理
+ */
+app.post("/update/:id", (req, res) => {
+  const sql = "UPDATE users SET ? WHERE id = " + req.params.id;
+  con.query(sql, req.body, (err, result, fields) => {
+    if (err) throw err;
+    console.log(result);
     res.redirect("/");
   });
 });
