@@ -17,10 +17,33 @@ app.get('/', (req, res) => {
   res.send('Hello, World!')
 })
 
+app.get('/port/:year/:month', (req, res) => {
+  // /:idなどがreq.params.id
+  //  ?name=1などはreq.queryでjson形式で取得できる
+  res.send(req.query)
+})
+
+/**
+ * コース取得
+ */
 app.get('/courses', (req, res) => {
   res.send(courses)
 })
 
+/**
+ * 指定したIDのコース取得
+ */
+app.get('/courses/:id', (req, res) => {
+  let course = findCourse(req.params.id)
+  if (!course) {
+    res.send('該当のidのコースが見つかりません。')
+  }
+  res.send(course)
+})
+
+/**
+ * コース登録
+ */
 app.post('/courses', (req, res) => {
   //   if (!req.body.name || req.body.length < 3) {
   //     // res.send('入力必須、かつ3文字以上')
@@ -40,6 +63,9 @@ app.post('/courses', (req, res) => {
   res.send(courses)
 })
 
+/**
+ * コース編集
+ */
 app.put('/courses/:id', (req, res) => {
   // 1. データ(course)を探す
   let course = findCourse(req.params.id)
@@ -59,18 +85,18 @@ app.put('/courses/:id', (req, res) => {
   res.send(courses)
 })
 
-app.get('/courses/:id', (req, res) => {
+app.delete('/courses/:id', function (req, res) {
+  console.log('aaaa')
+  // 1. 該当のコースデータの検索
   let course = findCourse(req.params.id)
   if (!course) {
     res.send('該当のidのコースが見つかりません。')
   }
-  res.send(course)
-})
-
-app.get('/port/:year/:month', (req, res) => {
-  // /:idなどがreq.params.id
-  //  ?name=1などはreq.queryでjson形式で取得できる
-  res.send(req.query)
+  // 2. 削除
+  let index = courses.indexOf(course)
+  courses.splice(index, 1)
+  // 3. 結果を返す
+  res.send(courses)
 })
 
 app.listen(port, () => {
