@@ -6,6 +6,8 @@ const hbs = require('hbs')
 
 // View engineのset
 app.set('view engine', 'hbs')
+// partialの設定(setの後)
+hbs.registerPartials(__dirname + '/views/partials')
 
 // ミドルウェア(middleware)
 // express.static(): 静的ファイル
@@ -14,8 +16,11 @@ app.set('view engine', 'hbs')
 app.use(express.static(__dirname + '/public'))
 
 app.get('/', (req, res) => {
-  // HTMLを送信できる
-  res.send('<h1>Hello, Express!</h1>')
+  res.render('home.hbs', {
+    pageTitle: 'Home Page',
+    content: '当ホームページへようこそ！',
+    currentYear: new Date().getFullYear(),
+  })
 })
 
 app.get('/about', (req, res) => {
