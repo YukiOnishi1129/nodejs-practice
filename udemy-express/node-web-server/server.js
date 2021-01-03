@@ -8,6 +8,13 @@ const hbs = require('hbs')
 app.set('view engine', 'hbs')
 // partialの設定(setの後)
 hbs.registerPartials(__dirname + '/views/partials')
+// helper (関数処理をまとめる)
+hbs.registerHelper('getCurentYear', () => {
+  return new Date().getFullYear()
+})
+hbs.registerHelper('uppercase', (text) => {
+  return text.toUpperCase()
+})
 
 // ミドルウェア(middleware)
 // express.static(): 静的ファイル
@@ -19,7 +26,6 @@ app.get('/', (req, res) => {
   res.render('home.hbs', {
     pageTitle: 'Home Page',
     content: '当ホームページへようこそ！',
-    currentYear: new Date().getFullYear(),
   })
 })
 
@@ -29,7 +35,6 @@ app.get('/about', (req, res) => {
   res.render('about.hbs', {
     pageTitle: 'About Page',
     content: 'コンテンツです。',
-    currentYear: new Date().getFullYear(),
   })
   // jsonを送信できる
   //   res.send({
