@@ -21,7 +21,11 @@ app.get('/', (req, res) => {
 app.get('/about', (req, res) => {
   // レンダリング処理
   // viewsディレクトリにある場合にのみ、ファイル名のみで記述できる
-  res.render('about.hbs')
+  res.render('about.hbs', {
+    pageTitle: 'About Page',
+    content: 'コンテンツです。',
+    currentYear: new Date().getFullYear(),
+  })
   // jsonを送信できる
   //   res.send({
   //     name: '太郎',
