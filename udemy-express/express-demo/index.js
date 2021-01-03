@@ -26,13 +26,10 @@ app.post('/courses', (req, res) => {
   //     // res.send('入力必須、かつ3文字以上')
   //     res.status(400)
   //   }
-  // Joiを使ったバリデーション
-  const schema = Joi.object({
-    name: Joi.string().min(3).required(),
-  })
-  let result = schema.validate(req.body)
-  if (result.error) {
-    res.send(result.error.details[0].message)
+  let { error } = validate(req.body)
+
+  if (error) {
+    res.send(error.details[0].message)
   }
 
   let course = {
@@ -45,17 +42,15 @@ app.post('/courses', (req, res) => {
 
 app.put('/courses/:id', (req, res) => {
   // 1. データ(course)を探す
-  let course = courses.find((e) => e.id === parseInt(req.params.id))
+  let course = findCourse(req.params.id)
   if (!course) {
     res.send('該当のidのコースが見つかりません。')
   }
   // 2. バリデーションを実施
-  const schema = Joi.object({
-    name: Joi.string().min(3).required(),
-  })
-  let result = schema.validate(req.body)
-  if (result.error) {
-    res.send(result.error.details[0].message)
+  let { error } = validate(req.body)
+
+  if (error) {
+    res.send(error.details[0].message)
   }
   // データを編集し、結果を返す
   courses.forEach((e) => {
@@ -65,7 +60,7 @@ app.put('/courses/:id', (req, res) => {
 })
 
 app.get('/courses/:id', (req, res) => {
-  let course = courses.find((e) => e.id === parseInt(req.params.id))
+  let course = findCourse(req.params.id)
   if (!course) {
     res.send('該当のidのコースが見つかりません。')
   }
@@ -81,3 +76,23 @@ app.get('/port/:year/:month', (req, res) => {
 app.listen(port, () => {
   console.log(`ポート番号${port}で立ち上がります。`)
 })
+
+/**
+ * コース検索処理
+ * @param {*} id
+ */
+const findCourse = (id) => {
+  return courses.find((e) => e.id === parseInt(id))
+}
+
+/**
+ * バリデーション処理
+ * @param {*} course
+ */
+const validate = (course) => {
+  // Joiを使ったバリデーション
+  const schema = Joi.object({
+    name: Joi.string().min(3).required(),
+  })
+  return schema.validate(course)
+}
