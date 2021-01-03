@@ -2,10 +2,14 @@ const { query } = require("express");
 const express = require("express");
 const path = require("path");
 const bodyParser = require("body-parser");
+const ejs = require("ejs");
 const app = express();
 const port = 3000;
 
 const mysql = require("mysql");
+
+// テンプレートエンジン追加
+app.set("view engine", "ejs");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -35,7 +39,7 @@ app.get("/", (req, res) => {
   const sql = "select * from users";
   con.query(sql, (err, result, fields) => {
     if (err) throw err;
-    res.send(result);
+    res.render("index", { users: result });
   });
 });
 
@@ -60,6 +64,18 @@ app.post("/form", (req, res) => {
     if (err) throw err;
     // console.log(result);
     // res.send("登録が完了しました");
+    res.redirect("/");
+  });
+});
+
+/**
+ * 削除処理
+ */
+app.get("/delete/:id", (req, res) => {
+  const sql = "DELETE FROM users WHERE id = ?";
+  con.query(sql, [req.params.id], (err, result, fields) => {
+    if (err) throw err;
+    console.log(result);
     res.redirect("/");
   });
 });
