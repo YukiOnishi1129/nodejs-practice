@@ -3,6 +3,7 @@ const express = require('express')
 // app変数でwebサーバー機能を編集する
 const app = express()
 const hbs = require('hbs')
+const fs = require('fs')
 
 // View engineのset
 app.set('view engine', 'hbs')
@@ -17,6 +18,28 @@ hbs.registerHelper('uppercase', (text) => {
 })
 
 // ミドルウェア(middleware)
+// use: ミドルウェアを登録する関数
+
+app.use((req, res, next) => {
+  let now = new Date()
+  let log = `${now}: ${req.method} ${req.url}`
+  console.log(log)
+  fs.appendFile('server.log', log + '\n', (err) => {
+    if (err) {
+      console.log(err)
+    }
+  })
+  // ミドルウェアの処理を終了させる
+  // next()の記載は必須
+  next()
+})
+
+// app.use((req, res, next) => {
+//   res.render('maintenance.hbs')
+
+//   next()
+// })
+
 // express.static(): 静的ファイル
 // __dirname: nodeアプリの根っこのパス
 // public直下のファイルにアクセスできるようになる(htmlファイルとか)
