@@ -43,6 +43,27 @@ app.post('/courses', (req, res) => {
   res.send(courses)
 })
 
+app.put('/courses/:id', (req, res) => {
+  // 1. データ(course)を探す
+  let course = courses.find((e) => e.id === parseInt(req.params.id))
+  if (!course) {
+    res.send('該当のidのコースが見つかりません。')
+  }
+  // 2. バリデーションを実施
+  const schema = Joi.object({
+    name: Joi.string().min(3).required(),
+  })
+  let result = schema.validate(req.body)
+  if (result.error) {
+    res.send(result.error.details[0].message)
+  }
+  // データを編集し、結果を返す
+  courses.forEach((e) => {
+    if (e.id === parseInt(req.params.id)) e.name = req.body.name
+  })
+  res.send(courses)
+})
+
 app.get('/courses/:id', (req, res) => {
   let course = courses.find((e) => e.id === parseInt(req.params.id))
   if (!course) {
