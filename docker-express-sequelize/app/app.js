@@ -1,8 +1,5 @@
-const { query } = require("express");
 const express = require("express");
-const path = require("path");
 const bodyParser = require("body-parser");
-const ejs = require("ejs");
 const app = express();
 const port = 3000;
 
