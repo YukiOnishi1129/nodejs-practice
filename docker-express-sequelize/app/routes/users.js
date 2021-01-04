@@ -1,9 +1,15 @@
-var express = require('express');
-var router = express.Router();
+const express = require("express");
+const router = express.Router();
+const db = require("../models/index"); // cliでinitした時に作成されるmodels配下のindex.js
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+/**
+ * user情報取得API
+ */
+router.get("/", (req, res) => {
+  db.user.findAll({}).then((instances) => {
+    console.log(instances);
+    res.send(instances);
+  });
 });
 
 module.exports = router;
