@@ -10,7 +10,7 @@ services:
       - ./app:/app
     # command: [sh, -c, yarn && yarn start]
     ports:
-      - 3000:3000
+      - 80:3000
 
   db:
     container_name: express_db
