@@ -14,7 +14,7 @@
     "test-watch": "NODE_TEST=ON jest --coverage --watch",
     "db:create": "ts-node ./node_modules/.bin/typeorm migration:generate",
     "db:migrate": "ts-node ./node_modules/.bin/typeorm migration:run",
-    "db:revert": "ts-node ./node_modules/.bin/typeorm migration:revert",
+    "db:rillback": "ts-node ./node_modules/.bin/typeorm migration:revert",
     "db:drop": "ts-node ./node_modules/.bin/typeorm schema:drop"
   },
   "license": "MIT",
