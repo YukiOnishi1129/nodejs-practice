@@ -6,6 +6,7 @@ import { User } from "../../entities/User";
 import { UserSeed } from "./init/user.seed";
 
 (async () => {
+  console.log("============================");
   console.log("seeder start");
   // MySQLと接続
   const connection = await createConnection("default");
@@ -15,4 +16,5 @@ import { UserSeed } from "./init/user.seed";
 
   await connection.close();
   console.log("seeder end");
+  console.log("============================");
 })().catch((e) => console.log(e));

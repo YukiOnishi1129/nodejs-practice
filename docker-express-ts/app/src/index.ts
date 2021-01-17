@@ -1,10 +1,18 @@
 import express = require("express"); // こうしないとtsエラー
+import * as schedule from "node-schedule";
 
 const app = express();
 const PORT = 3000;
 
 app.get("/", (req, res) => {
   res.send("Hello, World!");
+});
+
+/**
+ * バッチ処理
+ */
+schedule.scheduleJob("* * * * *", () => {
+  console.log("running a task every minute");
 });
 
 // サーバを起動する (ユニットテスト時は実行されないようにする)
