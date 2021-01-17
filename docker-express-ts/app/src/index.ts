@@ -1,6 +1,6 @@
 require("module-alias/register");
 import express = require("express"); // こうしないとtsエラー
-import { JobAction } from "@Jobs/index";
+import { jobAction } from "@Jobs/index";
 
 const app = express();
 const PORT = 3000;
@@ -10,7 +10,7 @@ app.get("/", (req, res) => {
 });
 
 // ジョブスケジューリング
-JobAction();
+jobAction();
 
 // サーバを起動する (ユニットテスト時は実行されないようにする)
 if (!process.env.NODE_TEST) {
