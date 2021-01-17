@@ -1,5 +1,5 @@
 /**
- * バッチ処理
+ * ジョブ(バッチ処理)
  */
 require("module-alias/register");
 import * as schedule from "node-schedule";
