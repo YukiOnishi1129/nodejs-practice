@@ -6,16 +6,17 @@
     "tsc": "tsc",
     "ts-node": "ts-node",
     "dev": "node ./dist/index.js",
-    "start": "ts-node ./src/index.ts",
+    "start": "ts-node ./src/index.ts && ts-node ./src/db/seeders/insert.ts",
     "watch": "ts-node-dev ./src/index.ts",
     "lint": "eslint --ext '.js,.ts' ./src/**",
     "lint-fix": "eslint -- --fix --ext '.js,.ts' ./src/**",
     "test": "NODE_TEST=ON jest --coverage",
     "test-watch": "NODE_TEST=ON jest --coverage --watch",
-    "db:create": "ts-node ./node_modules/.bin/typeorm migration:generate",
+    "db:generate": "ts-node ./node_modules/.bin/typeorm migration:generate",
     "db:migrate": "ts-node ./node_modules/.bin/typeorm migration:run",
-    "db:rillback": "ts-node ./node_modules/.bin/typeorm migration:revert",
-    "db:drop": "ts-node ./node_modules/.bin/typeorm schema:drop"
+    "db:rollback": "ts-node ./node_modules/.bin/typeorm migration:revert",
+    "db:drop": "ts-node ./node_modules/.bin/typeorm schema:drop",
+    "db:seed": "ts-node ./src/db/seeders/insert.ts"
   },
   "license": "MIT",
   "devDependencies": {
