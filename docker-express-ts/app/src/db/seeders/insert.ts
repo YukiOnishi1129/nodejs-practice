@@ -1,9 +1,10 @@
 /**
- * Seeder用ファイル
+ * Seeder実行ファイル
  */
+require("module-alias/register"); // 絶対パスを使う場合はこの記載が必要
 import { createConnection } from "typeorm";
-import { User } from "../../entities/User";
-import { UserSeed } from "./init/user.seed";
+import { User } from "@Models/User";
+import { UserSeed } from "@Seeders/user.seed";
 
 (async () => {
   console.log("============================");

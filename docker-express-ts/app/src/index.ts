@@ -1,5 +1,6 @@
+require("module-alias/register");
 import express = require("express"); // こうしないとtsエラー
-import * as schedule from "node-schedule";
+import { JobAction } from "@Jobs/index";
 
 const app = express();
 const PORT = 3000;
@@ -8,12 +9,8 @@ app.get("/", (req, res) => {
   res.send("Hello, World!");
 });
 
-/**
- * バッチ処理
- */
-schedule.scheduleJob("* * * * *", () => {
-  console.log("running a task every minute");
-});
+// ジョブスケジューリング
+JobAction();
 
 // サーバを起動する (ユニットテスト時は実行されないようにする)
 if (!process.env.NODE_TEST) {

@@ -1,7 +1,10 @@
 /**
  * usersテーブルの初期値
  */
-export const UserSeed = [
+require("module-alias/register");
+import { UserType } from "@Types/user";
+
+export const UserSeed: Pick<UserType, "name">[] = [
   {
     name: "Taro",
   },

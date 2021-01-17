@@ -1,3 +1,4 @@
+require("module-alias/register");
 import {
   Column,
   CreateDateColumn,
@@ -5,9 +6,10 @@ import {
   Entity,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { UserType } from "@Types/user";
 
 @Entity()
-export class User {
+export class User implements UserType {
   @PrimaryGeneratedColumn()
   readonly id!: number;
 
