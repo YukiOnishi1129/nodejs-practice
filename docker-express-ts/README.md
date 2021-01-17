@@ -25,6 +25,12 @@ docker-compose stop
 // 実装変更を反映させたりする場合に使用したり
 docker-compose restart
 
+// 停止&削除
+docker-compose down
+
+// 停止＆削除（コンテナ・ネットワーク・ボリューム）
+docker-compose down -v
+
 // appサーバにアクセス
 docker exec -it express_app sh
 // mysqlにアクセス
@@ -62,3 +68,21 @@ npm install
 
 - "esModuleInterop": true, について
   - https://chaika.hatenablog.com/entry/2020/09/29/083000
+
+##### TypeORM
+
+- https://programmagick.com/blogs/node_typeorm/
+
+- https://www.wakuwakubank.com/posts/729-typeorm-migration/
+
+- https://qiita.com/techneconn/items/0655f4d88187b65a8520
+
+- https://qiita.com/koheiiwamura/items/4045763e825ad2e2cc84
+
+- https://qiita.com/tejitak/items/b6965380afd600db6513
+
+- https://jnst.hateblo.jp/entry/2018/09/27/120032
+
+- https://jnst.hateblo.jp/entry/2018/09/27/120032
+
+- https://qiita.com/hedrall/items/4297ae0a92ce577b835f
